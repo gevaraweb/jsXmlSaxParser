@@ -62,6 +62,26 @@ function SaveToFile(sssr) {
     
 }
 
+function semToKurs(attr) {
+	
+	if (formaObuch == "заочная") {
+		 switch (attr) {
+			 case "1":
+				 attr = "1) Установочная сессия";
+				 break;
+			 case "2":
+				 attr = "2) Зимняя сессия";
+				 break;
+			 case "3":
+				 attr = "3) Летняя сессия";
+				 break;
+		 }
+	 }
+	 return attr;
+
+}
+
+
 function AddStyle() {
       // System.out.println("Start document");
     SaveToFile( "<link rel=\"stylesheet\" type=\"text/css\" href=\"tablestyle.css\">" );
@@ -81,6 +101,7 @@ function AddStyle() {
 		var dicName;
 		var strokiPlana; //СтрокиПлана;
 		var DisciplineForRazdelov; // ДисциплинаДляРазделов
+		var SpecVidyRabotNov; // СпецВидыРаботНов
 		var HTMLcode = "";
 		var DBcycle = ""; var flagCycle; // если дисциплины выборные
 		
@@ -152,6 +173,7 @@ DummyContentHandler.prototype.startDocument = function() {
                     SaveToFile("<p align = \"center\"> <b>" + profileName + "</b></p>\n" );
                     SaveToFile("<p>&nbsp;</p>\n");
                     strokiPlana = false; //СтрокиПлана;
+					SpecVidyRabotNov = false;
 
                     semestrCount = 0; flagCycle = false;
 					HTMLcode = "";
@@ -263,19 +285,7 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 								//console.log( "Дис " + dicName ); 
 								//console.log( "Ном " + attr ); 
 
-                                    if ( formaObuch=="заочная" ) {
-                                        switch (attr) {
-                                            case "1":
-                                                attr = "1) Установочная сессия";
-                                                break;
-                                            case "2":
-                                                attr = "2) Зимняя сессия";
-                                                break;
-                                            case "3":
-                                                attr = "3) Летняя сессия";
-                                                break;
-                                        }
-                                    }
+									attr = semToKurs(attr);
 
                                     matrixA[semestrCount - 1][1] = attr;
                                 }
@@ -348,6 +358,44 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
                             }
                         }
                     }
+					
+					
+					if (qName.equals("СпецВидыРаботНов")) {
+						SpecVidyRabotNov = true;
+					}
+					
+					if (qName.equals("ПрочаяПрактика")) {
+					
+					kursNumber = "";
+
+                        attr = attributes.getValue("Курс");
+                                if (attr != null) {
+									kursNumber = Integer.parseInt( attr );
+                                }
+									else {
+										attr = attributes.getValue("Сем");
+										if (attr != null) {
+											kursNumber = ( Integer.parseInt(attr) + 1 ) / 2;
+											kursNumber = Math.trunc(kursNumber);
+										}
+									}									
+															 
+						//	console.log( "kursNumber " + kursNumber ); 
+                                if (kursNumber == kursSelNumber) {
+								
+									semestrCount++;
+									matrixA[semestrCount - 1][0] = attributes.getValue("Вид");
+									//attr = semToKurs(kursNumber);
+                                    //matrixA[semestrCount - 1][1] = "я)";
+										if (formaObuch != "заочная") { matrixA[semestrCount - 1][1] = attr;	}
+											else matrixA[semestrCount - 1][1] = kursNumber +" курс";
+								}
+
+
+								
+
+                    }
+					
 
    
 };
@@ -359,6 +407,10 @@ DummyContentHandler.prototype.endElement = function(namespaceURI, localName, qNa
                strokiPlana = false;
 
       }
+	  if (qName.equals("СпецВидыРаботНов")) {
+			SpecVidyRabotNov = false;
+		}
+					
 };
 
 DummyContentHandler.prototype.startPrefixMapping = function(prefix, uri) {
@@ -388,7 +440,7 @@ DummyContentHandler.prototype.skippedEntity = function(name) {
 DummyContentHandler.prototype.endDocument = function() {
 
 
-                    SaveToFile("<table id = \"myTable\" class=\"tablesorter\">");
+                    SaveToFile("<table id = \"" + id_myTable + "\" class=\"tablesorter\">");
 
                           /*  <Сессия Ном="3" Пр="8" КСР="2" СРС="58" ЧасЭкз="4" Зач="1" ВидКонтр="З">
                                     M - значения:
@@ -438,12 +490,11 @@ DummyContentHandler.prototype.endDocument = function() {
 		
 		//var opened = window.open("");
 		//opened.document.write( HTMLcode );					
-		$("#msg").html(HTMLcode);
+		$("#" + id_msg ).html(HTMLcode);
 		//$("#myTable").tablesorter();
 		// Simply use this, second item in array is sort order (0 = ascending, 1 = descending):
-		$("#myTable").tablesorter( {sortList: [[1,0],[0,0]]} ); 
-		//document.getElementById( "msg"
-		
+		$("#" + id_myTable).tablesorter( {sortList: [[1,0],[0,0]]} ); 
+
 };
 
 DummyContentHandler.prototype.setDocumentLocator = function (locator) {
