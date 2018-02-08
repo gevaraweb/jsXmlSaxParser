@@ -196,6 +196,15 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
                     if ( qName == "Строка" ) {
 						DisciplineForRazdelov = false;
                         dicName = attributes.getValue("Дис");
+                        
+						var attr = attributes.getValue("ИдетификаторДисциплины");						
+						//console.log( attr );
+						if ( flagShowCode ) { 
+							if (attr != null) {
+								dicName = attr + " " + dicName;
+							}
+						}
+	
 						// console.log( "Дис " + dicName ); 
                         var attr = attributes.getValue("ДисциплинаДляРазделов");
 						// console.log( "attr " + attr );
@@ -389,9 +398,11 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
                                     //matrixA[semestrCount - 1][1] = "я)";
 										if (formaObuch != "заочная") { matrixA[semestrCount - 1][1] = attr;	}
 											else matrixA[semestrCount - 1][1] = kursNumber +" курс";
+										attr = attributes.getValue("Нед");
+										if (attr != null) {
+											matrixA[semestrCount - 1][1] += " (" + attr + " нед.)";
+										}							
 								}
-
-
 								
 
                     }
