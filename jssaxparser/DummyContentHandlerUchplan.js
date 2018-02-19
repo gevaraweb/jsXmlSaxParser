@@ -214,7 +214,7 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 							}
                         }
 						
-                        var attr = attributes.getValue("Цикл");
+                        var attr = attributes.getValue("НовЦикл");
 						// console.log( "attr " + attr );
 					
 					flagCycle = false;						 
