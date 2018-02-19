@@ -197,7 +197,7 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 						DisciplineForRazdelov = false;
                         dicName = attributes.getValue("Дис");
                         
-						var attr = attributes.getValue("ИдетификаторДисциплины");						
+						var attr = attributes.getValue("НовИдДисциплины");						
 						//console.log( attr );
 						if ( flagShowCode ) { 
 							if (attr != null) {
