@@ -175,7 +175,7 @@ DummyContentHandler.prototype.startDocument = function() {
                     strokiPlana = false; //СтрокиПлана;
 					SpecVidyRabotNov = false;
 
-                    semestrCount = 0; flagCycle = false;
+                    semestrCount = -1; flagCycle = false; DBcycle = "";
 					HTMLcode = "";
                     for (var i = 0; i<N; i++ ) {
                         for (var j = 0; j<M; j++ ) {
@@ -222,8 +222,8 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 							
 							if (attr.indexOf( "ДВ") > -1 ) {
 
-							 	if ( DBcycle == attr ) { //semestrCount--; console.log( "-- " ); 
-								//	matrixA[semestrCount - 1][0] += dicName;
+							 	if ( DBcycle == attr ) { 
+
 									flagCycle = true;
 								}
 								DBcycle = attr;
@@ -283,10 +283,10 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
                                 Расчетно-графические работы 10
                              */
 
-								if ( flagCycle ) { matrixA[semestrCount - 1][0] += " / " + dicName; } 
+								if ( flagCycle ) { matrixA[semestrCount][0] += " / " + dicName; } 
 								else {
-                                 semestrCount++;
-								matrixA[semestrCount - 1][0] = dicName;
+                               semestrCount++;
+								matrixA[semestrCount][0] = dicName;
 			
                                 attr = attributes.getValue("Ном");
                                 if (attr != null) {
@@ -296,69 +296,69 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 
 									attr = semToKurs(attr);
 
-                                    matrixA[semestrCount - 1][1] = attr;
+                                    matrixA[semestrCount][1] = attr;
                                 }
 
                                 attr = attributes.getValue("Лек");
                                 if (attr != null) {
-                                    matrixA[semestrCount - 1][2] = attr;
+                                    matrixA[semestrCount][2] = attr;
                                 }
 
                                 attr = attributes.getValue("Пр");
                                 if (attr != null) {
-                                    matrixA[semestrCount - 1][3] = attr;
+                                    matrixA[semestrCount][3] = attr;
                                 }
 
                                 attr = attributes.getValue("Лаб");
                                 if (attr != null) {
-                                    matrixA[semestrCount - 1][4] = attr;
+                                    matrixA[semestrCount][4] = attr;
                                 }
 
                                 attr = attributes.getValue("Зач");
                                 if (attr != null) {
                                     if (attr.equals("1")) {
-                                        matrixA[semestrCount - 1][5] = " + ";
+                                        matrixA[semestrCount][5] = " + ";
                                     }
                                 }
 
                                 attr = attributes.getValue("ЗачО");
                                      if (attr != null) {
                                         if (attr.equals("1")) {
-                                            matrixA[semestrCount - 1][6] = " + ";
+                                            matrixA[semestrCount][6] = " + ";
                                         }
                                }
 
                                 attr = attributes.getValue("Экз");
                                 if (attr != null) {
                                     if (attr.equals("1")) {
-                                        matrixA[semestrCount - 1][7] = " + ";
+                                        matrixA[semestrCount][7] = " + ";
                                     }
                                 }
 
                                 attr = attributes.getValue("КР"); // курсовая работа
                                 if (attr != null) {
                                     if (attr.equals("1")) {
-                                        matrixA[semestrCount - 1][8] = " + ";
+                                        matrixA[semestrCount][8] = " + ";
                                     }
                                 }
                                 attr = attributes.getValue("КП"); // курсовой проект
                                     if (attr != null) {
                                         if (attr.equals("1")) {
-                                            matrixA[semestrCount - 1][8] = " + ";
+                                            matrixA[semestrCount][8] = " + ";
                                         }
                                 }
 
                                 attr = attributes.getValue("КонтрРаб");
                                 if (attr != null) {
                                     if (attr.equals("1")) {
-                                        matrixA[semestrCount - 1][9] = " + ";
+                                        matrixA[semestrCount][9] = " + ";
                                     }
                                 }
 
                                 attr = attributes.getValue("РГР");
                                 if (attr != null) {
                                     if (attr.equals("1")) {
-                                        matrixA[semestrCount - 1][10] = " + ";
+                                        matrixA[semestrCount][10] = " + ";
                                     }
                                 }
 							  
@@ -392,16 +392,18 @@ DummyContentHandler.prototype.startElement = function(namespaceURI, localName, q
 						//	console.log( "kursNumber " + kursNumber ); 
                                 if (kursNumber == kursSelNumber) {
 								
-									semestrCount++;
-									matrixA[semestrCount - 1][0] = attributes.getValue("Вид");
+									
+									matrixA[semestrCount][0] = attributes.getValue("Вид");
 									//attr = semToKurs(kursNumber);
-                                    //matrixA[semestrCount - 1][1] = "я)";
-										if (formaObuch != "заочная") { matrixA[semestrCount - 1][1] = attr;	}
-											else matrixA[semestrCount - 1][1] = kursNumber +" курс";
+
+										if (formaObuch != "заочная") { matrixA[semestrCount][1] = attr;	}
+											else matrixA[semestrCount][1] = kursNumber +" курс";
 										attr = attributes.getValue("Нед");
 										if (attr != null) {
-											matrixA[semestrCount - 1][1] += " (" + attr + " нед.)";
+											matrixA[semestrCount][1] += " (" + attr + " нед.)";
 										}							
+								
+									semestrCount++;
 								}
 								
 
