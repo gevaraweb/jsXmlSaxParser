@@ -487,7 +487,7 @@ DummyContentHandler.prototype.endDocument = function() {
                     SaveToFile( "\n</tr>" );
 					SaveToFile( "\n</thead>\n" );
 					SaveToFile( "<tbody>\n" );					
-                    for (var i = 0; i<semestrCount; i++ ) {
+                    for (var i = 0; i<semestrCount+1; i++ ) {
                         SaveToFile( "\n<tr>\n" );
                         for (var j = 0; j<M; j++ ) {
                             SaveToFile( "\t<td>" + matrixA[i][j] + "</td>" );
